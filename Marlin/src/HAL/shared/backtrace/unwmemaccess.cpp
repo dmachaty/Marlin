@@ -117,6 +117,17 @@
 #define END_FLASH_ADDR    0x00140000
 #endif
 
+#ifdef TARGET_MK64FN1M0
+// For MK64FN1M0:
+//  SRAM  (0x10000000 - 0x10008000) (256kb)
+//  FLASH (0x00000000 - 0x00080000) (1024kB) (2x512kB -> potential issue)
+//
+#define START_SRAM_ADDR   0x1FFF0000
+#define END_SRAM_ADDR     0x20030000
+#define START_FLASH_ADDR  0x00000000
+#define END_FLASH_ADDR    0x00100000
+#endif
+
 static bool validate_addr(uint32_t addr) {
 
   // Address must be in SRAM range

@@ -21,6 +21,9 @@
   #define HAL_PLATFORM HAL_STM32F7
 #elif defined(ARDUINO_ARCH_ESP32)
   #define HAL_PLATFORM HAL_ESP32
+#elif defined(TARGET_MK64FN1M0)
+  #define HAL_PLATFORM HAL_MK64F12
+  #warning "Using unfinished platform, be careful!"
 #else
   #error "Unsupported Platform!"
 #endif

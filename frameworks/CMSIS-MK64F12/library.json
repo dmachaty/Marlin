@@ -1,0 +1,16 @@
+{
+  "name": "CMSIS-MK64F12",
+  "version": "0.0.1",
+  "frameworks": [],
+  "platforms": [
+      "freescalekinetis"
+  ],
+  "description": "CMSIS library for NXP MK64F12",
+  "build": {
+      "src_filter": "+<MK64F12/*>",
+      "flags": [
+        "-IMK64F12/include",
+        "-IMK64F12/lib"
+    ]
+  }
+}
