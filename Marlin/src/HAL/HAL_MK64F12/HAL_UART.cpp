@@ -215,6 +215,12 @@ size_t HAL_UART::printf(const char *format, ...) {
 size_t HAL_UART::write(uint8_t data) {
 
 #if TX_BUFFER_SIZE > 0
+  /*
+   * If TX Buffer implemented, do not use blocking transmitter when possible
+   * (ie block only when buffer full). Disable interrupts, insert the byte
+   * into buffer or FIFO (when buffer empty and FIFO has space available),
+   * and enable TX interrupt (Handler will disable it, when buffer empty).
+   */
 
   size_t bytes = 0;
   uint32_t fifolvl = 0;
@@ -246,12 +252,16 @@ size_t HAL_UART::write(uint8_t data) {
   return bytes;
 
 #else
-  
-  while ((UART_HAL_GetTxDatawordCountInFifo(UARTx)) >= (HAL_UART_TX_FIFO_SIZE - 2));      // Wait for FIFO to clear at least one byte
-  
-  UART_HAL_Putchar(UARTx, data);  // Send byte
-  return 1U;  
+  /*
+   * If no UART TX Buffer, use blocking transmitter 8B FIFO:
+   */
 
+  // Wait for FIFO to clear at least one byte
+  while ((UART_HAL_GetTxDatawordCountInFifo(UARTx)) >= (HAL_UART_TX_FIFO_SIZE - 2));
+  // Send byte
+  UART_HAL_Putchar(UARTx, data);
+  // Return success
+  return 1U;  
 #endif
 }
 
