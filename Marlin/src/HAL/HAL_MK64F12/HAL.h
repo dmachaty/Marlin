@@ -23,9 +23,12 @@
 //  Project
 #include <Arduino.h>
 #include <pinmapping.h>
-#include "HardwareSerial.h"
+#include "HAL_UART.h"
 #include "../shared/math_32bit.h"
 #include "../shared/HAL_SPI.h"
+
+#define SERIAL_PORT 0
+#define CPU_32_BIT
 
 /*
  * NVIC Interrupt priorities
@@ -50,4 +53,32 @@
   * 
  */
 
-#define SERIAL_PORT 0
+#if !WITHIN(SERIAL_PORT, 0, 1)
+  #error "SERIAL_PORT must be from 0 to 1"
+#endif
+
+#if SERIAL_PORT == 0
+  extern HAL_UART Serial;
+  #define MYSERIAL0 Serial
+#elif SERIAL_PORT == 1
+  extern HAL_UART Serial1;
+  #define MYSERIAL0 Serial1
+#endif
+
+#ifdef SERIAL_PORT_2
+  #if !WITHIN(SERIAL_PORT_2, 0, 1)
+    #error "SERIAL_PORT_2 must be from 0 to 1"
+  #elif SERIAL_PORT_2 == SERIAL_PORT
+    #error "SERIAL_PORT_2 must be different than SERIAL_PORT"
+  #endif
+  #define NUM_SERIAL 2
+  #if SERIAL_PORT_2 == 0
+    extern HAL_UART Serial;
+    #define MYSERIAL1 Serial
+  #elif SERIAL_PORT_2 == 1
+    extern HardwareSerial Serial1;
+    #define MYSERIAL1 Serial1
+  #endif
+#else
+  #define NUM_SERIAL 1
+#endif

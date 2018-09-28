@@ -19,6 +19,8 @@
 #ifdef TARGET_MK64FN1M0
 
 //  System
+#include <stdarg.h>
+#include <stdio.h>
 //  Framework
 #include <fsl_gpio_hal.h>
 #include <fsl_interrupt_manager.h>
@@ -87,8 +89,11 @@ void HAL_UART::begin(uint32_t baudRate) {
     UART_HAL_EnableReceiver(UARTx);
 
     UART_HAL_SetIntMode(UARTx, kUartIntRxDataRegFull, true);
-    //UART_HAL_SetIntMode(UARTx, kUartIntTxDataRegEmpty, true); // -> SET ONLY WHEN NECESSARRY
-    // TODO - enable error int?
+    
+    // ENABLED ONLY WHEN NECESSARRY (TX FIFO)
+    // UART_HAL_SetIntMode(UARTx, kUartIntTxDataRegEmpty, true); 
+
+    // TODO - Enable error interrupts?
 
     if(UARTx == UART0){
         NVIC_SetPriority(UART0_RX_TX_IRQn, NVIC_EncodePriority(0,3,0) );
@@ -145,7 +150,7 @@ void HAL_UART::IRQErrHandler(UART_Type * uartInstance){
   // TODO - enable framing IRQ, check status, read dummy byte, quit
 }
 
-void HAL_UART::printHex(uint8_t data){
+void HAL_UART::debugPrintHex(uint8_t data){
 
     uint8_t nibbleTop = ((data & 0xF0)>>4);
     uint8_t nibbleBot = ((data & 0x0F));

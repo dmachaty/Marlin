@@ -20,6 +20,7 @@
 #define _HAL_UART_H
 
 #include <MK64F12.h>
+#include <Stream.h>
 
 #define HAL_UART_TX_FIFO_SIZE   8   // Do not modify, fixed value
 #define HAL_UART_RX_FIFO_SIZE   8   // Do not modify, fixed value
@@ -44,9 +45,7 @@ struct HAL_UART_STATUS_t {
     #endif
 };
 
-
-
-class HAL_UART {
+class HAL_UART : public Stream {
     private:
         UART_Type   *UARTx;
         uint32_t    baudRate;
@@ -70,7 +69,7 @@ class HAL_UART {
         #endif
         {}
         void begin(uint32_t baudRate);
-        void printHex(uint8_t data);
+        void debugPrintHex(uint8_t data);
         size_t printf(const char *format, ...);
         void IRQHandler(UART_Type * uartInstance);
         void IRQErrHandler(UART_Type * uartInstance);

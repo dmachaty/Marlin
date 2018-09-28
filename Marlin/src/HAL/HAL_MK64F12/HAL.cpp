@@ -39,9 +39,8 @@
 #include "HAL_Board_Clock.h"
 #include "HAL_UART.h"
 
-volatile uint64_t _millis;
-
-HAL_UART MYSERIAL0(UART0);
+/* What about 32_t? Could be useful.. */
+volatile uint32_t _millis;
 
 void HAL_TestSuite_Init(void){
   MYSERIAL0.begin(115200);
@@ -63,6 +62,8 @@ void HAL_TestSuite_Loop(void){
   MYSERIAL0.printf("RX RD pos: %d\r\n", status.RxQueueReadPos);
   MYSERIAL0.printf("RX WR pos: %d\r\n", status.RxQueueWritePos);
   MYSERIAL0.printf("_millis:   %d\r\n", _millis);
+
+  MYSERIAL0.print("BAF");
   
   // Set Blue LED Off
   GPIO_HAL_WritePinOutput(PTB, 21, 1); // Blue LED
